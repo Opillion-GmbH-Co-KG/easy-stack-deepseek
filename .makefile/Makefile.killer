@@ -1,0 +1,12 @@
+# danger: this will remove all your docker stacks !!!
+clean:
+	@echo -n "Are you sure, this will drop any stack you have? [y/n] " && read ans && if [ $${ans:-'n'} = 'y' ]; then make --ignore-errors kill-all; fi
+
+kill-all:
+	docker stop $$(docker ps -a -q)
+	docker rm $$(docker ps -a -q) -f
+	docker rmi $$(docker images -a -q) -f
+	docker volume rm $$(docker volume ls -q) -f
+	docker image prune  -f
+	docker network prune  -f
+	docker system prune -a  -f

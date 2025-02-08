@@ -1,0 +1,13 @@
+name: All Checks Pass
+on:
+  pull_request:
+
+jobs:
+  check-all-running-jobs:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read
+      contents: read
+    steps:
+      - name: Ensure All Checks Pass
+        uses: wechuli/allcheckspassed@v1

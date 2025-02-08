@@ -1,0 +1,4 @@
+[ollama]
+model-dir = "/root/.olama/models"
+cache-dir = "/var/cache/ollama"
+default-model = "mistral"

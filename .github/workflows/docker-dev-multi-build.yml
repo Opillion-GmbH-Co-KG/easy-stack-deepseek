@@ -1,0 +1,103 @@
+name: Docker Multi-Build and Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      devImageTag:
+        description: 'Dev image tag'
+        required: true
+        default: 'easyStackMiniDev-DEEPSEEK'
+      prodImageTag:
+        description: 'Prod image tag'
+        required: true
+        default: 'easyStackMiniProd-DEEPSEEK'
+      baseImageTag:
+        description: 'Tag for the base image'
+        required: true
+        default: 'easyStackBase001'
+      imageSource:
+        description: 'The type of image (prod/dev/base/all)'
+        required: true
+        default: 'all'
+      containers:
+        description: 'Containers you want to build'
+        required: true
+        default: 'ollama,open-webui,qdrant,qdrant-frontend'
+      platforms:
+        description: 'Platforms you want to build your containers for'
+        required: true
+        default: 'linux/amd64,linux/arm64'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_REPO_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: Build and push docker images
+        run: |
+          IFS=',' read -r -a containers <<< "${{ github.event.inputs.containers }}"
+          USER_ID="1000"
+          GROUP_ID="1001"
+          DOCKER_REPO_USER="${{ secrets.DOCKER_REPO_USER }}"
+          DOCKER_PASS="${{ secrets.DOCKER_PASS }}"
+          DEV_IMAGE_TAG="${{ github.event.inputs.devImageTag }}"
+          PROD_IMAGE_TAG="${{ github.event.inputs.prodImageTag }}"
+          BASE_IMAGE_TAG="${{ github.event.inputs.baseImageTag }}"
+          DOCKER_USER="docker"
+          PLATFORMS="${{ github.event.inputs.platforms }}"
+          CONTAINER_NAME_ID="$DOCKER_REPO_USER-image"
+          DOCKER_IMAGE_SOURCE="${{ github.event.inputs.imageSource }}"
+
+          BUILD_IMAGES() {
+            local source=$1
+            local tag=$2
+            for container in "${containers[@]}"; do
+              echo "Building container: $container (Source: $source, Tag: $tag)"
+              docker buildx build \
+              --platform $PLATFORMS \
+              -t $DOCKER_REPO_USER/$container:$tag \
+              --build-arg DOCKER_USER=$DOCKER_USER \
+              --build-arg USER_ID=$USER_ID \
+              --build-arg GROUP_ID=$GROUP_ID \
+              --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG \
+              --build-arg DEV_IMAGE_TAG=$DEV_IMAGE_TAG \
+              --build-arg PROD_IMAGE_TAG=$PROD_IMAGE_TAG \
+              -f .docker/$source/$container.Dockerfile \
+              --push .
+              echo "Build done for: $container"
+            done
+          }
+
+          if [[ "$DOCKER_IMAGE_SOURCE" == "all" ]]; then
+            echo "Building base images"
+            BUILD_IMAGES base $BASE_IMAGE_TAG
+            echo "Building dev images"
+            BUILD_IMAGES dev $DEV_IMAGE_TAG
+            echo "Building prod images"
+            BUILD_IMAGES prod $PROD_IMAGE_TAG
+          else
+            BUILD_IMAGE_TAG=""
+            if [[ "$DOCKER_IMAGE_SOURCE" == "base" ]]; then
+              BUILD_IMAGE_TAG=$BASE_IMAGE_TAG
+            elif [[ "$DOCKER_IMAGE_SOURCE" == "dev" ]]; then
+              BUILD_IMAGE_TAG=$DEV_IMAGE_TAG
+            elif [[ "$DOCKER_IMAGE_SOURCE" == "prod" ]]; then
+              BUILD_IMAGE_TAG=$PROD_IMAGE_TAG
+            fi
+
+            BUILD_IMAGES $DOCKER_IMAGE_SOURCE $BUILD_IMAGE_TAG
+          fi
+
+          echo "All Containers built, tagged, and pushed to $DOCKER_REPO_USER!"

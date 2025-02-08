@@ -1,0 +1,31 @@
+
+define measure_time
+	$(OUTPUT)echo "Starting: $1"
+	$(OUTPUT)/bin/bash -c 'SECONDS=0 ; \
+		OUTPUT=$(OUTPUT) $(MAKE) -s $1 ; \
+		OUTPUT=$(OUTPUT) $(MAKE) -s logo-callback ; \
+		echo -e $(COLOR_GREEN)"\n Total Runtime: $$((SECONDS / 60)) min. $$((SECONDS % 60)) sec.\n"$(COLOR_OFF)'
+endef
+
+define buildx-build
+	$(OUTPUT)echo "Target: $1"
+	$(OUTPUT)docker buildx rm buildx || exit 0
+	$(OUTPUT)printf $(COLOR_GREEN)"\nCreating runtime container buildx.\n\n"$(COLOR_OFF)
+	$(OUTPUT)docker buildx create --name buildx
+	$(OUTPUT)docker buildx use buildx
+	$(OUTPUT)./.docker/.build/buildx.sh \
+		$(USER_ID) \
+		$(GROUP_ID) \
+		$(DOCKER_CONTAINER) \
+		$(DOCKER_REPO_USER) \
+		$(DOCKER_PASS) \
+		$(DEV_IMAGE_TAG) \
+		$(DOCKER_USER) \
+		$(PLATFORMS) \
+		$(BASE_IMAGE_TAG) \
+		$(PROD_IMAGE_TAG) \
+		$1
+	$(MAKE) -s fix-buildx \
+	remove-buildx
+endef
+

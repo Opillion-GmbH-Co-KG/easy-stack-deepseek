@@ -1,0 +1,9 @@
+.idea
+.env
+docker-compose.override.yml
+/.docker/dev/ollama/data/models
+/.docker/dev/ollama/data/config
+/.docker/dev/ollama/data/id_ed25519
+/.docker/dev/ollama/data/id_ed25519.pub
+/.docker/dev/open-webui/data/cache
+/.docker/dev/open-webui/data/webui.db

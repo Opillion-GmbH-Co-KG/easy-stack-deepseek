@@ -1,0 +1,22 @@
+%:
+	@:
+
+list-models:
+	$(OUTPUT)$(OLLAMA) ollama list
+
+download-models:
+	$(OUTPUT)$(OLLAMA_EXECUTE) -c "export OLLAMA_DOWNLOAD_MODELS=\"$(OLLAMA_DOWNLOAD_MODELS)\" && /opt/download-models.sh"
+
+remove-models:
+	$(OUTPUT)$(OLLAMA_EXECUTE) -c "/opt/remove-models.sh"
+
+create-model:
+	$(OUTPUT)$(OLLAMA) ollama create custom-model -f /root/.ollama/custom/Modelfile
+
+remove-model:
+	$(OUTPUT)$(OLLAMA) ollama rm $(word 2, $(MAKECMDGOALS))
+
+pull-model:
+	$(OUTPUT)$(OLLAMA) ollama pull $(word 2, $(MAKECMDGOALS))
+
+

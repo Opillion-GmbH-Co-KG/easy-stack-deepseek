@@ -1,0 +1,136 @@
+services:
+  ollama:
+    hostname: ollama
+    container_name: ollama
+    restart: unless-stopped
+    build:
+      context: .docker/${DOCKER_IMAGE_SOURCE}/
+      dockerfile: ollama.Dockerfile
+      args:
+        BASE_IMAGE_TAG: ${BASE_IMAGE_TAG}
+        DEV_IMAGE_TAG: ${DEV_IMAGE_TAG}
+        PROD_IMAGE_TAG: ${PROD_IMAGE_TAG}
+    expose:
+      - "${OLLAMA_INTERNAL_PORT}" # 11434
+    environment:
+      OLLAMA_NUM_THREADS: 16
+      OLLAMA_GPU_LAYERS: ${OLLAMA_GPU_LAYERS}
+      OLLAMA_MODELS: ${OLLAMA_MODELS}
+      OLLAMA_DOWNLOAD_MODELS: ${OLLAMA_DOWNLOAD_MODELS}
+      OLLAMA_HOME: /root/.ollama
+      GIN_MODE: ${GIN_MODE}
+      OLLAMA_BACKEND: mlx # mlx, ggml oder trt für ROCm
+      ROCM_VISIBLE_DEVICES: all
+      HSA_OVERRIDE_GFX_VERSION: 11.0.0
+    stdin_open: true
+    tty: true
+    volumes:
+      - ${OLLAMA_DATA_PATH:-ollama_data}:/root/.ollama
+      - ./.docker/dev/ollama/config:/root/.ollama/config:ro
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 2 && ollama pull ${OLLAMA_STARTUP_MODEL} && wait"]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://ollama:${OLLAMA_INTERNAL_PORT}/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - default
+
+  qdrant:
+    hostname: qdrant
+    container_name: qdrant
+    restart: unless-stopped
+    build:
+      context: .docker/${DOCKER_IMAGE_SOURCE}/
+      dockerfile: qdrant.Dockerfile
+      args:
+        BASE_IMAGE_TAG: ${BASE_IMAGE_TAG}
+        DEV_IMAGE_TAG: ${DEV_IMAGE_TAG}
+        PROD_IMAGE_TAG: ${PROD_IMAGE_TAG}
+    expose:
+      - "${QDRANT_INTERNAL_PORT}" # 6333 # REST API
+      - "${QDRANT_INTERNAL_PORT_TWO}" # 6334
+    volumes:
+      - ${QDRANT_DATA_PATH:-qdrant_data}:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "/qdrant/qdrant", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - default
+
+  qdrant-frontend:
+    hostname: qdrant-frontend
+    container_name: qdrant-frontend
+    restart: unless-stopped
+    build:
+      context: .docker/${DOCKER_IMAGE_SOURCE}/
+      dockerfile: qdrant-frontend.Dockerfile
+      args:
+        BASE_IMAGE_TAG: ${BASE_IMAGE_TAG}
+        DEV_IMAGE_TAG: ${DEV_IMAGE_TAG}
+        PROD_IMAGE_TAG: ${PROD_IMAGE_TAG}
+    ports:
+      - "${QDRANT_FRONTEND_EXTERNAL_PORT}:${QDRANT_FRONTEND_INTERNAL_PORT}"
+    environment:
+      VITE_QDRANT_HOST: http://qdrant:${QDRANT_INTERNAL_PORT}
+      QDRANT__SERVICE__ENABLE_CORS: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://qdrant-frontend:${QDRANT_FRONTEND_INTERNAL_PORT}"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - default
+
+  open-webui:
+    hostname: open-webui
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    container_name: open-webui
+    restart: unless-stopped
+    build:
+      context: .docker/${DOCKER_IMAGE_SOURCE}/
+      dockerfile: open-webui.Dockerfile
+      args:
+        BASE_IMAGE_TAG: ${BASE_IMAGE_TAG}
+        DEV_IMAGE_TAG: ${DEV_IMAGE_TAG}
+        PROD_IMAGE_TAG: ${PROD_IMAGE_TAG}
+    ports:
+      - "${OPEN_CHAT_UI_EXTERNAL_PORT}:${OPEN_CHAT_UI_INTERNAL_PORT}"
+    environment:
+      VECTOR_STORAGE_BACKEND: qdrant
+      VECTOR_DATABASE_URL: http://qdrant:${QDRANT_INTERNAL_PORT}
+      RAG_QDRANT_URL: http://qdrant:${QDRANT_INTERNAL_PORT}
+      OLLAMA_BASE_URL: http://ollama:${OLLAMA_INTERNAL_PORT}
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
+      WEBUI_DISABLE_TELEMETRY: ${WEBUI_DISABLE_TELEMETRY}
+      VECTOR_DB: ${VECTOR_DB}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ${OPENWEBUI_DATA_PATH:-openwebui_data}:/app/backend/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://open-webui:${OPEN_CHAT_UI_INTERNAL_PORT}"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - default
+
+
+volumes:
+  ollama_data:
+  openwebui_data:
+  qdrant_data:
+
+networks:
+  default:
+    name: ${DOCKER_NETWORK}
+    driver: bridge
