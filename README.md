@@ -4,6 +4,21 @@ This stack is designed to provide a fully integrated AI solution. Ollama serves 
 
 The model: deepseek-r1:32b is relatively large at 19 GB and will be downloaded during the first start of the stack. Depending on your internet connection, this may take some time. No download is necessary on subsequent starts. Please check the Docker logs to monitor the progress.
 
+#### Caution! Caution! This stack is intended for development use only and is not configured for production. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
+
+## Important Notice
+
+We strongly recommend changing all passwords in the `.env.dist` file. These are purely test data and should not be used even in development mode.
+
+### How to Update Environment Variables
+
+1. Create a `.env` file next to `.env.dist`:
+   ```sh
+   cp .env.dist .env
+   ```
+2. Open the `.env` file and update the relevant values.
+3. The `.env` file will be automatically loaded if it exists and will override the corresponding environment variables.
+4. 
 ## **Stack Overview**
 ![Alt text](.makefile/assets/app.png?raw=true" "Open Webui")
 
