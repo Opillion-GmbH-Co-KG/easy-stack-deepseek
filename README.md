@@ -82,9 +82,9 @@ To install and start the application, follow these steps:
 Clone this Project
 
 ```sh
-git clone git@github.com:Opillion-GmbH-Co-KG/easy-stack-mini-deepseek.git
+git clone git@github.com:Opillion-GmbH-Co-KG/easy-stack-deepseek.git
 
-cd ./easy-stack-mini-deepseek
+cd ./easy-stack-deepseek
 
  ```
 
