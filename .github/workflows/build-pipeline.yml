@@ -76,4 +76,5 @@ jobs:
           BUILD_IMAGES dev "${{ env.DEV_IMAGE_TAG }}"
           BUILD_IMAGES prod "${{ env.PROD_IMAGE_TAG }}"
 
-          echo "🚀 Alle Container wurden erfolgreich gebaut, getaggt und gepusht!"
+          echo "🚀 All containers have been successfully built, tagged, and pushed!"
+
