@@ -4,21 +4,6 @@ This stack is designed to provide a fully integrated AI solution. Ollama serves 
 
 The model: deepseek-r1:32b is relatively large at 19 GB and will be downloaded during the first start of the stack. Depending on your internet connection, this may take some time. No download is necessary on subsequent starts. Please check the Docker logs to monitor the progress.
 
-#### Caution! Caution! This stack is intended for development use only and is not configured for production. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
-
-## Important Notice
-
-We strongly recommend changing all passwords in the `.env.dist` file. These are purely test data and should not be used even in development mode.
-
-### How to Update Environment Variables
-
-1. Create a `.env` file next to `.env.dist`:
-   ```sh
-   cp .env.dist .env
-   ```
-2. Open the `.env` file and update the relevant values.
-3. The `.env` file will be automatically loaded if it exists and will override the corresponding environment variables.
-4. 
 ## **Stack Overview**
 ![Alt text](.makefile/assets/app.png?raw=true" "Open Webui")
 
@@ -37,6 +22,56 @@ We strongly recommend changing all passwords in the `.env.dist` file. These are 
 </a>
 
 
+#### Caution! Caution! This stack is intended for development use only and is not configured for production. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
+
+## Important Notice
+
+We strongly recommend changing all passwords in the `.env.dist` file. These are purely test data and should not be used even in development mode.
+
+### How to Update Environment Variables
+
+1. Create a `.env` file next to `.env.dist`:
+   ```sh
+   cp .env.dist .env
+   ```
+2. Open the `.env` file and update the relevant values.
+3. The `.env` file will be automatically loaded if it exists and will override the corresponding environment variables.
+4. 
+
+## Installation and Starting the Application
+To install and start the application, follow these steps:
+
+### Prerequisites
+- Docker and Docker Compose must be installed on the system.
+
+#### Before you run this project, ensure the following are installed on your host system:
+
+- Git
+- Docker
+- Docker Compose
+- Make
+
+#### Build this stack
+
+Clone this Project
+
+```sh
+git clone git@github.com:Opillion-GmbH-Co-KG/easy-stack-deepseek.git
+
+cd ./easy-stack-deepseek
+
+ ```
+
+To start and install this stack:
+
+```sh
+make start
+ ```
+or
+
+```sh
+make restart
+```
 ## Docker Compose Setup
 
 ### **Services**
@@ -69,50 +104,18 @@ We strongly recommend changing all passwords in the `.env.dist` file. These are 
   - **External:** `${OPEN_CHAT_UI_EXTERNAL_PORT} -> ${OPEN_CHAT_UI_INTERNAL_PORT}`
 - **Name:** open-webui
 
-### **Licenses**
-- **DeepSeek-R1:** [MIT License](https://github.com/deepseek-ai/DeepSeek-R1/blob/main/LICENSE)
-- **Ollama:** [Apache 2.0 License](https://github.com/jmorganca/ollama/blob/main/LICENSE)
-- **Qdrant:** [Apache 2.0 License](https://github.com/qdrant/qdrant/blob/master/LICENSE)
-- **Qdrant WebUi:** [Apache 2.0 License](https://github.com/qdrant/qdrant-web-ui/blob/master/LICENSE)
-- **Open WebUI:** [MIT License](https://github.com/open-webui/open-webui/blob/main/LICENSE)
+## License Information
 
-#### Caution! Caution! This stack is intended for development use only and is not configured for production. Please make sure to change all passwords immediately. You can override the values from the .env.dist file with a custom .env file. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
-
-## Installation and Starting the Application
-To install and start the application, follow these steps:
-
-### Prerequisites
-- Docker and Docker Compose must be installed on the system.
-
-#### Before you run this project, ensure the following are installed on your host system:
-
-- Git
-- Docker
-- Docker Compose
-- Make
-
-#### Build this stack
+| Container          | License     | Description                                                |
+|--------------------|-------------|------------------------------------------------------------|
+| **Easy-Stack**     | GPL-3.0     | [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)       |
+| **DeepSeek-R1**    | MIT         | [MIT License](https://github.com/deepseek-ai/deepseek-llm) |
+| **Ollama**         | Apache-2.0  | [Apache-2.0](https://github.com/jmorganca/ollama)          |
+| **Qdrant**         | Apache-2.0  | [Apache-2.0](https://github.com/qdrant/qdrant)             |
+| **Qdrant WebUI**   | Apache-2.0  | [Apache-2.0](https://github.com/qdrant/qdrant-webui)       |
+| **Open WebUI**     | MIT         | [MIT License](https://github.com/open-webui/open-webui)    |
 
 
-Clone this Project
-
-```sh
-git clone git@github.com:Opillion-GmbH-Co-KG/easy-stack-deepseek.git
-
-cd ./easy-stack-deepseek
-
- ```
-
-To start and install this stack:
-
-```sh
-make start
- ```
-or
-
-```sh
-make restart
-```
 
 ## This Stack is based on Easy Stack Mini
 
