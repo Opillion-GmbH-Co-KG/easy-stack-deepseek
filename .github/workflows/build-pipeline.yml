@@ -1,0 +1,79 @@
+name: Build (all) Docker Container
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check path
+        run: ls -sla
+
+      - name: Load environment variables
+        run: |
+          for file in .env.dist .env; do
+            if [ -f "$file" ]; then
+              echo "Loading $file..."
+              while IFS= read -r line; do
+                [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+                key="${line%%=*}"
+                value="${line#*=}"
+                echo "Exporting: $key"
+                export "$key=$value"
+                echo "$key=$value" >> $GITHUB_ENV
+              done < "$file"
+            fi
+          done
+          
+          echo "Loaded environment variables:"
+          env | grep -E 'DOCKER_CONTAINER|BASE_IMAGE_TAG|DEV_IMAGE_TAG|PROD_IMAGE_TAG|PLATFORMS'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_REPO_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: Build and push Docker images
+        run: |
+          IFS=',' read -r -a containers <<< "${{ env.DOCKER_CONTAINER }}"
+          
+          USER_ID="1000"
+          GROUP_ID="1001"
+          DOCKER_USER="docker"
+          DOCKER_REPO_USER="${{ secrets.DOCKER_REPO_USER }}"
+          PLATFORMS="${{ env.PLATFORMS }}"
+
+          BUILD_IMAGES() {
+            local source=$1
+            local tag=$2
+            for container in "${containers[@]}"; do
+              echo "Building container: $container (Source: $source, Tag: $tag)"
+              docker buildx build \
+              --platform $PLATFORMS \
+              -t $DOCKER_REPO_USER/$container:$tag \
+              --build-arg DOCKER_USER=$DOCKER_USER \
+              --build-arg USER_ID=$USER_ID \
+              --build-arg GROUP_ID=$GROUP_ID \
+              --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG \
+              --build-arg DEV_IMAGE_TAG=$DEV_IMAGE_TAG \
+              --build-arg PROD_IMAGE_TAG=$PROD_IMAGE_TAG \
+              -f .docker/$source/$container.Dockerfile \
+              --push .
+              echo "Build done for: $container"
+            done
+          }
+          echo "🔄 Building all image types..."
+          BUILD_IMAGES base "${{ env.BASE_IMAGE_TAG }}"
+          BUILD_IMAGES dev "${{ env.DEV_IMAGE_TAG }}"
+          BUILD_IMAGES prod "${{ env.PROD_IMAGE_TAG }}"
+
+          echo "🚀 Alle Container wurden erfolgreich gebaut, getaggt und gepusht!"

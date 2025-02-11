@@ -21,46 +21,6 @@ The model: deepseek-r1:32b is relatively large at 19 GB and will be downloaded d
     <img src="https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V2/refs/heads/main/figures/logo.svg" width="150" alt="DeepSeek AI Logo">
 </a>
 
-
-## Docker Compose Setup
-
-### **Services**
-
-### **Ollama**
-- **Image:** Custom build
-- **Description:** Ollama is an AI model hosting service designed to manage and serve machine learning models efficiently. It allows for seamless deployment and interaction with AI models, enabling applications to leverage advanced AI capabilities for various tasks such as natural language processing and predictive analytics. By default, the `deepseek-r1:32b` model is installed, which is a state-of-the-art large language model optimized for reasoning, text generation, and AI-powered insights.
-- **Ports:**
-  - **Internal:** `${OLLAMA_INTERNAL_PORT}`
-- **Name:** ollama
-
-### **Qdrant**
-- **Image:** Custom build
-- **Description:** Qdrant is a high-performance vector search database optimized for handling AI-driven search queries. It efficiently processes embeddings from machine learning models, making it ideal for similarity search, recommendation systems, and AI-powered discovery applications.
-- **Ports:**
-  - **Internal:** `${QDRANT_INTERNAL_PORT}`
-- **Name:** qdrant
-
-### **Qdrant Frontend**
-- **Image:** Custom build
-- **Description:** A web-based UI for managing and interacting with Qdrant, providing an intuitive interface for vector search database operations.
-- **Ports:**
-  - **External:** `${QDRANT_FRONTEND_EXTERNAL_PORT} -> ${QDRANT_FRONTEND_INTERNAL_PORT}`
-- **Name:** qdrant-frontend
-
-### **Open WebUI**
-- **Image:** Custom build
-- **Description:** Open WebUI provides a user-friendly web interface for interacting with AI models hosted on Ollama. It allows users to query models, visualize results, and manage AI-based tasks in an intuitive and accessible way.
-- **Ports:**
-  - **External:** `${OPEN_CHAT_UI_EXTERNAL_PORT} -> ${OPEN_CHAT_UI_INTERNAL_PORT}`
-- **Name:** open-webui
-
-### **Licenses**
-- **DeepSeek-R1:** [MIT License](https://github.com/deepseek-ai/DeepSeek-R1/blob/main/LICENSE)
-- **Ollama:** [Apache 2.0 License](https://github.com/jmorganca/ollama/blob/main/LICENSE)
-- **Qdrant:** [Apache 2.0 License](https://github.com/qdrant/qdrant/blob/master/LICENSE)
-- **Qdrant WebUi:** [Apache 2.0 License](https://github.com/qdrant/qdrant-web-ui/blob/master/LICENSE)
-- **Open WebUI:** [MIT License](https://github.com/open-webui/open-webui/blob/main/LICENSE)
-
 #### Caution! Caution! This stack is intended for development use only and is not configured for production. Please make sure to change all passwords immediately. You can override the values from the .env.dist file with a custom .env file. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
 
 ## Installation and Starting the Application
@@ -98,6 +58,54 @@ or
 ```sh
 make restart
 ```
+
+## Docker Compose Setup
+
+### **Services**
+
+### **Ollama**
+- **Image:** Custom build
+- **Description:** Ollama is an AI model hosting service designed to manage and serve machine learning models efficiently. It allows for seamless deployment and interaction with AI models, enabling applications to leverage advanced AI capabilities for various tasks such as natural language processing and predictive analytics. By default, the `deepseek-r1:32b` model is installed, which is a state-of-the-art large language model optimized for reasoning, text generation, and AI-powered insights.
+- **Ports:**
+  - **Internal:** `${OLLAMA_INTERNAL_PORT}`
+- **Name:** ollama
+
+### **Qdrant**
+- **Image:** Custom build
+- **Description:** Qdrant is a high-performance vector search database optimized for handling AI-driven search queries. It efficiently processes embeddings from machine learning models, making it ideal for similarity search, recommendation systems, and AI-powered discovery applications.
+- **Ports:**
+  - **Internal:** `${QDRANT_INTERNAL_PORT}`
+- **Name:** qdrant
+
+### **Qdrant Frontend**
+- **Image:** Custom build
+- **Description:** A web-based UI for managing and interacting with Qdrant, providing an intuitive interface for vector search database operations.
+- **Ports:**
+  - **External:** `${QDRANT_FRONTEND_EXTERNAL_PORT} -> ${QDRANT_FRONTEND_INTERNAL_PORT}`
+- **Name:** qdrant-frontend
+
+### **Open WebUI**
+- **Image:** Custom build
+- **Description:** Open WebUI provides a user-friendly web interface for interacting with AI models hosted on Ollama. It allows users to query models, visualize results, and manage AI-based tasks in an intuitive and accessible way.
+- **Ports:**
+  - **External:** `${OPEN_CHAT_UI_EXTERNAL_PORT} -> ${OPEN_CHAT_UI_INTERNAL_PORT}`
+- **Name:** open-webui
+
+## License Information
+
+| Container           | License    | Description                                                |
+|---------------------|------------|------------------------------------------------------------|
+| **Easy-Stack**      | GPL-3.0    | [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)       |
+| **DeepSeek-R1**     | MIT        | [MIT License](https://github.com/deepseek-ai/deepseek-llm) |
+| **Ollama**          | Apache-2.0 | [Apache-2.0](https://github.com/jmorganca/ollama)          |
+| **Qdrant**          | Apache-2.0 | [Apache-2.0](https://github.com/qdrant/qdrant)             |
+| **Qdrant WebUI**    | Apache-2.0 | [Apache-2.0](https://github.com/qdrant/qdrant-webui)       |
+| **Open WebUI**      | MIT        | [MIT License](https://github.com/open-webui/open-webui)    |
+
+
+## More Information
+
+[Usefull Makefile Commands](./README.makefile.md)
 
 ## This Stack is based on Easy Stack Mini
 
