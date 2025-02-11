@@ -93,14 +93,14 @@ make restart
 
 ## License Information
 
-| Container           | License    | Description                                                |
-|---------------------|------------|------------------------------------------------------------|
-| **Easy-Stack**      | GPL-3.0    | [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)       |
-| **DeepSeek-R1**     | MIT        | [MIT License](https://github.com/deepseek-ai/deepseek-llm) |
-| **Ollama**          | Apache-2.0 | [Apache-2.0](https://github.com/jmorganca/ollama)          |
-| **Qdrant**          | Apache-2.0 | [Apache-2.0](https://github.com/qdrant/qdrant)             |
-| **Qdrant WebUI**    | Apache-2.0 | [Apache-2.0](https://github.com/qdrant/qdrant-webui)       |
-| **Open WebUI**      | MIT        | [MIT License](https://github.com/open-webui/open-webui)    |
+| Container          | License     | Description                                                |
+|--------------------|-------------|------------------------------------------------------------|
+| **Easy-Stack**     | GPL-3.0     | [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)       |
+| **DeepSeek-R1**    | MIT         | [MIT License](https://github.com/deepseek-ai/deepseek-llm) |
+| **Ollama**         | Apache-2.0  | [Apache-2.0](https://github.com/jmorganca/ollama)          |
+| **Qdrant**         | Apache-2.0  | [Apache-2.0](https://github.com/qdrant/qdrant)             |
+| **Qdrant WebUI**   | Apache-2.0  | [Apache-2.0](https://github.com/qdrant/qdrant-webui)       |
+| **Open WebUI**     | MIT         | [MIT License](https://github.com/open-webui/open-webui)    |
 
 
 ## More Information
