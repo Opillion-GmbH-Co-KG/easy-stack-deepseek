@@ -21,7 +21,20 @@ The model: deepseek-r1:32b is relatively large at 19 GB and will be downloaded d
     <img src="https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V2/refs/heads/main/figures/logo.svg" width="150" alt="DeepSeek AI Logo">
 </a>
 
-#### Caution! Caution! This stack is intended for development use only and is not configured for production. Please make sure to change all passwords immediately. You can override the values from the .env.dist file with a custom .env file. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
+#### Caution! Caution! This stack is intended for development use only and is not configured for production. For production use, please refer to the "Easy-Stack-Prod" stack - comming soon.
+
+## Important Notice
+
+We strongly recommend changing all passwords in the `.env.dist` file. These are purely test data and should not be used even in development mode.
+
+### How to Update Environment Variables
+
+1. Create a `.env` file next to `.env.dist`:
+   ```sh
+   cp .env.dist .env
+   ```
+2. Open the `.env` file and update the relevant values.
+3. The `.env` file will be automatically loaded if it exists and will override the corresponding environment variables.
 
 ## Installation and Starting the Application
 To install and start the application, follow these steps:
