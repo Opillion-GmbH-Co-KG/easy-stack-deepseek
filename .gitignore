@@ -4,3 +4,6 @@ docker-compose.override.yml
 /.docker/dev/ollama/data
 /.docker/dev/open-webui/data
 
+/.docker/volumes/ollama/
+/.docker/volumes/open-webui/
+/.docker/volumes/qdrant/

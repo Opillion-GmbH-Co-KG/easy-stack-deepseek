@@ -113,6 +113,7 @@ services:
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     volumes:
       - ${OPENWEBUI_DATA_PATH:-openwebui_data}:/app/backend/data
     healthcheck:

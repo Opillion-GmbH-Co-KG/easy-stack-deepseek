@@ -1,5 +1,0 @@
-FROM deepseek-r1:32b
-PARAMETER temperature 0.5
-PARAMETER top_p 0.8
-
-SYSTEM "Du bist ein KI-Assistent, der nur auf Deutsch antwortet. Bitte gib kurze und präzise Antworten, ohne unnötige Details."
