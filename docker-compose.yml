@@ -10,8 +10,8 @@ services:
         BASE_IMAGE_TAG: ${BASE_IMAGE_TAG}
         DEV_IMAGE_TAG: ${DEV_IMAGE_TAG}
         PROD_IMAGE_TAG: ${PROD_IMAGE_TAG}
-    expose:
-      - "${OLLAMA_INTERNAL_PORT}" # 11434
+    ports:
+      - "${OLLAMA_EXTERNAL_PORT}:${OLLAMA_INTERNAL_PORT}" # 11434:11434
     environment:
       OLLAMA_NUM_THREADS: 16
       OLLAMA_GPU_LAYERS: ${OLLAMA_GPU_LAYERS}
